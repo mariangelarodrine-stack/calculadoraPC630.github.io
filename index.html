@@ -3,91 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <title>Simula tu rentabilidad</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       padding: 20px;
       background-color: #f4f6f8;
-      transition: all 0.3s ease;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
       font-style: italic;
-      font-family: "Segoe UI", "Georgia", serif;
     }
 
-    /* 🔥 BANNER */
-    .banner {
+    .tabla-resumen {
+      margin-bottom: 40px;
       text-align: center;
-      margin-bottom: 20px;
     }
 
-    .banner img {
-      width: 756px;   /* ≈ 20cm */
-      height: 567px;  /* ≈ 15cm */
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    .tablas-flex {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      align-items: stretch;
     }
 
+    .tabla-box {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      overflow: hidden;
+      width: 300px;
+      font-size: 14px;
+    }
+
+    .tabla-box th {
+      background: #2f3e4e;
+      color: white;
+      padding: 12px;
+      font-weight: 600;
+    }
+
+    .tabla-box td {
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      text-align: center;
+    }
+
+    .tabla-box tr {
+      height: 48px;
+    }
+
+    .resaltado {
+      background: #fff200;
+      font-weight: bold;
+    }
+
+    .fuerte {
+      background: #ffe600;
+      font-weight: bold;
+    }
+
+    .verde {
+      background: #b9e4c9;
+      font-weight: bold;
+    }
+
+    /* CALCULADORA */
     .container {
       display: flex;
       gap: 30px;
-      flex-wrap: wrap;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     table {
       border-collapse: collapse;
       width: 320px;
-      background-color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background: white;
       border-radius: 12px;
       overflow: hidden;
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     th {
-      background-color: #2c3e50;
+      background: #2c3e50;
       color: white;
-      padding: 12px;
-      text-align: center;
-      font-size: 16px;
+      padding: 10px;
     }
 
     td {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-    }
-
-    input {
-      padding: 8px;
+      padding: 10px;
       text-align: center;
-      font-size: 14px;
     }
 
     .total {
-      background-color: #ffe082;
+      background: #ffe082;
       font-weight: bold;
-      text-align: center;
-      font-size: 16px;
     }
 
     .ganancia {
-      margin-top: 20px;
+      margin-top: 35px;
       text-align: center;
       font-size: 20px;
       font-weight: bold;
-      background-color: #c8e6c9;
+      background: #c8e6c9;
       padding: 15px;
       border-radius: 10px;
-      width: 320px;
+      width: 300px;
       margin-left: auto;
       margin-right: auto;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
     }
 
     .botones {
@@ -98,133 +126,158 @@
     }
 
     .boton {
-      background-color: #e0e0e0;
-      color: #333;
+      background: #e0e0e0;
       padding: 8px 12px;
       border-radius: 8px;
-      font-size: 14px;
-      text-align: center;
-      min-width: 160px;
-      border: 1px solid #d0d0d0;
-      transition: all 0.2s ease;
     }
-
-    .boton:hover {
-      background-color: #d6d6d6;
-    }
-
-    .toggle {
-      display: block;
-      margin: 0 auto 20px auto;
-      padding: 10px 15px;
-      background-color: #1976d2;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .presentacion h1 { font-size: 32px; }
-    .presentacion table { width: 400px; font-size: 18px; }
-    .presentacion th { font-size: 20px; }
-    .presentacion .ganancia { font-size: 28px; width: 420px; }
-    .presentacion .boton { font-size: 18px; padding: 12px; }
-    .presentacion input { font-size: 18px; padding: 10px; }
-
   </style>
 </head>
 
-<body id="body">
+<body>
 
-  <!-- 🔥 IMAGEN SUPERIOR CORREGIDA -->
-  <div class="banner">
-    <img src="Imagen4.jpg" alt="San Juan">
-  </div>
+<div class="tabla-resumen">
 
-  <button class="toggle" onclick="toggleModo()">Modo Presentación</button>
+  <h2>Resumen Compra y Venta - San Juan 620</h2>
 
-  <h1>Simula tu ganancia: compra hoy y vende al nuevo precio</h1>
+  <div class="tablas-flex">
 
-  <div style="text-align:center; margin-bottom:20px;">
-    <label><strong>Ingresa Cajas:</strong></label>
-    <input type="number" id="cajas" oninput="calcular()" style="width:150px; margin-left:10px;">
-  </div>
-
-  <div class="container">
-
-    <table>
-      <tr><th colspan="2">Compra en Abril</th></tr>
-      <tr><td>Precio de compra</td><td>S/ 62.30</td></tr>
-      <tr><td>Cajas</td><td id="cajasCompra">0</td></tr>
-      <tr><td>Total</td><td class="total" id="totalCompra">S/ 0.00</td></tr>
+    <!-- COMPRA -->
+    <table class="tabla-box">
+      <tr><th colspan="4">Compra</th></tr>
+      <tr>
+        <td><b>Bodeguero</b></td>
+        <td><b>Precio Botella</b></td>
+        <td><b>Cantidad botellas</b></td>
+        <td><b>Precio Caja</b></td>
+      </tr>
+      <tr>
+        <td><b>Hoy</b></td>
+        <td>S/ 5.19</td>
+        <td>12</td>
+        <td><b>S/ 62.30</b></td>
+      </tr>
+      <tr>
+        <td><b>Voceo Abril</b></td>
+        <td>S/ 5.19</td>
+        <td>12</td>
+        <td><b>S/ 62.30</b></td>
+      </tr>
     </table>
 
-    <table>
-      <tr><th colspan="2">Vende en Mayo</th></tr>
-      <tr><td>Precio de venta</td><td>S/ 78.00</td></tr>
-      <tr><td>Cajas</td><td id="cajasVenta">0</td></tr>
-      <tr><td>Total</td><td class="total" id="totalVenta">S/ 0.00</td></tr>
+    <!-- VENTA -->
+    <table class="tabla-box">
+      <tr><th colspan="4">Venta</th></tr>
+      <tr>
+        <td><b>Consumidor</b></td>
+        <td><b>Precio Botella</b></td>
+        <td><b>Cantidad botellas</b></td>
+        <td><b>Precio Caja</b></td>
+      </tr>
+      <tr>
+        <td><b>Hoy</b></td>
+        <td class="resaltado">S/ 6.00</td>
+        <td>12</td>
+        <td><b>S/ 72.00</b></td>
+      </tr>
+      <tr>
+        <td><b>Mayo</b></td>
+        <td class="resaltado">S/ 6.50</td>
+        <td>12</td>
+        <td><b>S/ 78.00</b></td>
+      </tr>
+    </table>
+
+    <!-- GANANCIA -->
+    <table class="tabla-box">
+      <tr><th colspan="2">Ganancia por Caja</th></tr>
+
+      <tr>
+        <td><b>Hoy</b></td>
+        <td>S/ 9.70</td>
+      </tr>
+
+      <tr>
+        <td><b>Mayo</b></td>
+        <td class="fuerte">💰 S/ 15.70</td>
+      </tr>
+
+      <tr>
+        <td><b>Beneficio Voceo</b></td>
+        <td class="verde">S/ 6.00</td>
+      </tr>
+
     </table>
 
   </div>
+</div>
 
-  <div class="ganancia" id="ganancia">
-    💰 Ganancia Total: S/ 0.00
-  </div>
+<!-- CALCULADORA -->
+<h1>💰 Simula tu ganancia</h1>
 
-  <div class="botones">
-    <div class="boton" id="gananciaCaja">💰 Ganancia/Caja: S/ 0.00</div>
-    <div class="boton" id="rentabilidad">📈 Rentabilidad: 0%</div>
-  </div>
+<div style="text-align:center; margin: 25px 0;">
+  <label><strong>📦 Cajas</strong></label><br><br>
+  <input type="number" id="cajas" oninput="calcular()" 
+         style="padding:10px; width:140px; text-align:center; border-radius:8px;">
+</div>
 
-  <script>
-    function formatoMoneda(numero) {
-      return numero.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
+<div class="container">
 
-    function calcular() {
-      let precioCompra = 62.30;
-      let precioVenta = 78.00;
-      let cajas = document.getElementById('cajas').value || 0;
+  <table>
+    <tr><th colspan="2">Compra</th></tr>
+    <tr><td>Precio</td><td>S/ 62.30</td></tr>
+    <tr><td>Cajas</td><td id="cajasCompra">0</td></tr>
+    <tr><td>Total</td><td class="total" id="totalCompra">S/ 0</td></tr>
+  </table>
 
-      document.getElementById('cajasCompra').innerText = cajas;
-      document.getElementById('cajasVenta').innerText = cajas;
+  <table>
+    <tr><th colspan="2">Venta</th></tr>
+    <tr><td>Precio</td><td>S/ 78.00</td></tr>
+    <tr><td>Cajas</td><td id="cajasVenta">0</td></tr>
+    <tr><td>Total</td><td class="total" id="totalVenta">S/ 0</td></tr>
+  </table>
 
-      let totalCompra = cajas * precioCompra;
-      let totalVenta = cajas * precioVenta;
-      let ganancia = totalVenta - totalCompra;
+</div>
 
-      let gananciaPorCaja = precioVenta - precioCompra;
-      let rentabilidad = totalCompra > 0 ? (ganancia / totalCompra) * 100 : 0;
+<div class="ganancia" id="ganancia">💰 Ganancia Total: S/ 0</div>
 
-      document.getElementById('totalCompra').innerText = 'S/ ' + formatoMoneda(totalCompra);
-      document.getElementById('totalVenta').innerText = 'S/ ' + formatoMoneda(totalVenta);
-      document.getElementById('ganancia').innerText = '💰 Ganancia Total: S/ ' + formatoMoneda(ganancia);
-      document.getElementById('gananciaCaja').innerText = '💰 Ganancia/Caja: S/ ' + formatoMoneda(gananciaPorCaja);
+<div class="botones">
+  <div class="boton" id="gananciaCaja">💰 Ganancia/Caja: S/ 0</div>
+  <div class="boton" id="rentabilidad">📈 Rentabilidad: 0%</div>
+</div>
 
-      let rentabilidadText = document.getElementById('rentabilidad');
-      rentabilidadText.innerText = '📈 Rentabilidad: ' + rentabilidad.toFixed(1) + '%';
+<script>
+function formatoMoneda(numero) {
+  return numero.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
 
-      if (rentabilidad > 25) {
-        rentabilidadText.style.backgroundColor = '#c8e6c9';
-      } else if (rentabilidad > 10) {
-        rentabilidadText.style.backgroundColor = '#fff9c4';
-      } else {
-        rentabilidadText.style.backgroundColor = '#ffcdd2';
-      }
+function calcular() {
+  let cajas = document.getElementById("cajas").value || 0;
 
-      let box = document.getElementById('ganancia');
-      box.style.backgroundColor = ganancia > 0 ? '#c8e6c9' : '#ffcdd2';
-    }
+  let compra = 62.30;
+  let venta = 78.00;
 
-    function toggleModo() {
-      document.getElementById('body').classList.toggle('presentacion');
-    }
-  </script>
+  let totalCompra = cajas * compra;
+  let totalVenta = cajas * venta;
+  let ganancia = totalVenta - totalCompra;
+
+  document.getElementById("cajasCompra").innerText = cajas;
+  document.getElementById("cajasVenta").innerText = cajas;
+
+  document.getElementById("totalCompra").innerText = "S/ " + formatoMoneda(totalCompra);
+  document.getElementById("totalVenta").innerText = "S/ " + formatoMoneda(totalVenta);
+
+  document.getElementById("ganancia").innerText = "💰 Ganancia Total: S/ " + formatoMoneda(ganancia);
+
+  let gananciaCaja = venta - compra;
+  document.getElementById("gananciaCaja").innerText = "💰 Ganancia/Caja: S/ " + formatoMoneda(gananciaCaja);
+
+  let rent = (ganancia / totalCompra) * 100 || 0;
+  document.getElementById("rentabilidad").innerText = "📈 Rentabilidad: " + rent.toFixed(1) + "%";
+}
+</script>
 
 </body>
 </html>
