@@ -57,6 +57,12 @@
       height: 48px;
     }
 
+    /* 🔥 SOLUCIÓN SALTO DE LÍNEA */
+    .precio {
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
     .resaltado {
       background: #fff200;
       font-weight: bold;
@@ -151,15 +157,15 @@
       </tr>
       <tr>
         <td><b>Hoy</b></td>
-        <td>S/ 5.19</td>
+        <td class="precio">S/ 5.19</td>
         <td>12</td>
-        <td><b>S/ 62.30</b></td>
+        <td class="precio"><b>S/ 62.30</b></td>
       </tr>
       <tr>
         <td><b>Voceo Abril</b></td>
-        <td>S/ 5.19</td>
+        <td class="precio">S/ 5.19</td>
         <td>12</td>
-        <td><b>S/ 62.30</b></td>
+        <td class="precio"><b>S/ 62.30</b></td>
       </tr>
     </table>
 
@@ -174,24 +180,24 @@
       </tr>
       <tr>
         <td><b>Hoy</b></td>
-        <td class="resaltado">S/ 6.00</td>
+        <td class="precio resaltado">S/ 6.00</td>
         <td>12</td>
-        <td><b>S/ 72.00</b></td>
+        <td class="precio"><b>S/ 72.00</b></td>
       </tr>
       <tr>
         <td><b>Mayo</b></td>
-        <td class="resaltado">S/ 6.50</td>
+        <td class="precio resaltado">S/ 6.50</td>
         <td>12</td>
-        <td><b>S/ 78.00</b></td>
+        <td class="precio"><b>S/ 78.00</b></td>
       </tr>
     </table>
 
     <!-- GANANCIA -->
     <table class="tabla-box">
       <tr><th colspan="2">Ganancia por Caja</th></tr>
-      <tr><td><b>Hoy</b></td><td>S/ 9.70</td></tr>
-      <tr><td><b>Mayo</b></td><td class="fuerte">💰 S/ 15.70</td></tr>
-      <tr><td><b>Beneficio Voceo</b></td><td class="verde">💰 S/ 6.00</td></tr>
+      <tr><td><b>Hoy</b></td><td class="precio">S/ 9.70</td></tr>
+      <tr><td><b>Mayo</b></td><td class="precio fuerte">💰 S/ 15.70</td></tr>
+      <tr><td><b>Beneficio Voceo</b></td><td class="precio verde">💰 S/ 6.00</td></tr>
     </table>
 
   </div>
@@ -210,21 +216,20 @@
 
   <table>
     <tr><th colspan="2">Compra</th></tr>
-    <tr><td>Precio</td><td>S/ 62.30</td></tr>
+    <tr><td>Precio</td><td class="precio">S/ 62.30</td></tr>
     <tr><td>Cajas</td><td id="cajasCompra">0</td></tr>
     <tr><td>Total</td><td class="total" id="totalCompra">S/ 0</td></tr>
   </table>
 
   <table>
     <tr><th colspan="2">Venta</th></tr>
-    <tr><td>Precio</td><td>S/ 78.00</td></tr>
+    <tr><td>Precio</td><td class="precio">S/ 78.00</td></tr>
     <tr><td>Cajas</td><td id="cajasVenta">0</td></tr>
     <tr><td>Total</td><td class="total" id="totalVenta">S/ 0</td></tr>
   </table>
 
 </div>
 
-<!-- GANANCIAS -->
 <div class="ganancia" id="ganancia">💰 Ganancia Total: S/ 0</div>
 
 <div class="ganancia" id="gananciaVoceo">
