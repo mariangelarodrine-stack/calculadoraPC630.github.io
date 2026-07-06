@@ -352,8 +352,7 @@ body {
       <div class="badge blue">💰 Compra por caja: S/ 68.95</div>
     </div>
 
-      </div>
-    <!-- 🔥 GANANCIA ORIENTE (CARD) -->
+    <!-- GANANCIA ORIENTE -->
     <div class="card">
       <div class="card-row">
         <div class="icon green">🏆</div>
@@ -369,20 +368,12 @@ body {
             <div>Desde 20.07</div>
             <strong>S/ 16.40</strong>
           </div>
-
-          <div style="margin-top:10px; font-weight:bold; color:#007a32;">
-
-          </div>
-
-          <div class="gain-row">
-        </div>
         </div>
       </div>
       <div class="badge blue">💰 Ganancia por caja (Voceo): S/ 6.40</div>
-
     </div>
 
-    <!-- 🔥 GANANCIA HUANCAYO (CARD) -->
+    <!-- GANANCIA HUANCAYO -->
     <div class="card">
       <div class="card-row">
         <div class="icon blue">🏆</div>
@@ -398,16 +389,10 @@ body {
             <div>Desde 20.07</div>
             <strong>S/ 15.05</strong>
           </div>
-       </div>
-      </div>   
-    <div class="badge blue">💰 Ganancia por caja (Voceo): S/ 6.00</div>          <div style="margin-top:10px; font-weight:bold; color:#064f9e;">
-
+        </div>
+      </div>
+      <div class="badge blue">💰 Ganancia por caja (Voceo): S/ 6.00</div>
     </div>
-
- <div class="gain-row">
-
-    </div>
-
 
     <div class="sim-header">💰 SIMULA TU GANANCIA</div>
 
@@ -536,6 +521,14 @@ function menos() {
   calcular();
 }
 
+// FORMATEADOR DE MILES
+function format(n) {
+  return n.toLocaleString('es-PE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
 function calcular() {
   const cajas = Number(document.getElementById("cajas").value) || 0;
   const precioVenta = 84.00;
@@ -561,18 +554,18 @@ function calcular() {
   const voceo = cajas * voceoCaja;
   const rentabilidad = (gananciaCaja / precioCompra) * 100;
 
-  document.getElementById("gananciaTotal").innerText = `S/ ${gananciaTotal.toFixed(2)}`;
-  document.getElementById("voceo").innerText = `S/ ${voceo.toFixed(2)}`;
-  document.getElementById("gananciaCaja").innerText = `S/ ${gananciaCaja.toFixed(2)}`;
+  document.getElementById("gananciaTotal").innerText = `S/ ${format(gananciaTotal)}`;
+  document.getElementById("voceo").innerText = `S/ ${format(voceo)}`;
+  document.getElementById("gananciaCaja").innerText = `S/ ${format(gananciaCaja)}`;
   document.getElementById("rentabilidad").innerText = `${rentabilidad.toFixed(1)}%`;
 
   document.getElementById("tituloCompra").innerText = `COMPRA ${nombreZona.toUpperCase()}`;
-  document.getElementById("precioCompra").innerText = `S/ ${precioCompra.toFixed(2)}`;
+  document.getElementById("precioCompra").innerText = `S/ ${format(precioCompra)}`;
   document.getElementById("cajasCompra").innerText = cajas;
   document.getElementById("cajasVenta").innerText = cajas;
-  document.getElementById("totalCompra").innerText = `S/ ${totalCompra.toFixed(2)}`;
-  document.getElementById("totalVenta").innerText = `S/ ${totalVenta.toFixed(2)}`;
-  document.getElementById("gananciaFinal").innerText = `S/ ${gananciaTotal.toFixed(2)}`;
+  document.getElementById("totalCompra").innerText = `S/ ${format(totalCompra)}`;
+  document.getElementById("totalVenta").innerText = `S/ ${format(totalVenta)}`;
+  document.getElementById("gananciaFinal").innerText = `S/ ${format(gananciaTotal)}`;
 
   document.getElementById("nota").innerText =
     `💡 Los cálculos están basados en compra ${nombreZona} y venta desde el 20.07.`;
