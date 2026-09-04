@@ -1,153 +1,1035 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Simula tu rentabilidad</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f4f6f8;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Volumen Beer</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:white;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#111827;
+}
+
+.container{
+    width:95%;
+    max-width:1250px;
+    margin:30px auto;
+}
+
+/* TÍTULO */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.title{
+    color:#123b91;
+    font-size:20px;
+    font-weight:bold;
+    font-style:italic;
+    text-transform:uppercase;
+}
+
+/* SELECTOR */
+
+select{
+    width:360px;
+    padding:11px 14px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    background:white;
+    font-size:14px;
+    color:#333;
+    cursor:pointer;
+}
+
+/* NOMBRE CLIENTE */
+
+.client-title{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.subtitle{
+    font-size:12px;
+    color:#777;
+    margin-bottom:5px;
+}
+
+/* GRÁFICO */
+
+.chart-container{
+    width:100%;
+    height:480px;
+}
+
+svg{
+    width:100%;
+    height:100%;
+    overflow:visible;
+}
+
+/* GRID */
+
+.grid{
+    stroke:#eeeeee;
+    stroke-width:1;
+}
+
+/* EJES */
+
+.axis-label{
+    font-size:11px;
+    fill:#777;
+}
+
+.month-label{
+    font-size:12px;
+    fill:#222;
+}
+
+/* LÍNEAS */
+
+.line-2025{
+    fill:none;
+    stroke:#e3b51b;
+    stroke-width:3;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.line-2026{
+    fill:none;
+    stroke:#111111;
+    stroke-width:3.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+/* PUNTOS */
+
+.point-2025{
+    fill:#e3b51b;
+    stroke:white;
+    stroke-width:2;
+}
+
+.point-2026{
+    fill:#111111;
+    stroke:white;
+    stroke-width:2;
+}
+
+/* VALORES */
+
+.value-2025{
+    font-size:11px;
+    fill:#987900;
+    font-weight:500;
+}
+
+.value-2026{
+    font-size:11px;
+    fill:#111;
+    font-weight:500;
+}
+
+/* LEYENDA */
+
+.legend{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    margin-top:5px;
+    font-size:12px;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.legend-circle{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+}
+
+.yellow{
+    background:#e3b51b;
+}
+
+.black{
+    background:#111;
+}
+
+/* CRECIMIENTO */
+
+.growth{
+    display:flex;
+    justify-content:center;
+    gap:45px;
+    margin-top:20px;
+    font-size:12px;
+    color:#777;
+}
+
+.growth strong{
+    font-size:14px;
+    color:#111;
+}
+
+.positive{
+    color:#16803c !important;
+}
+
+.negative{
+    color:#c62828 !important;
+}
+
+/* TOOLTIP */
+
+.tooltip{
+    position:fixed;
+    display:none;
+    background:#111827;
+    color:white;
+    padding:10px 12px;
+    border-radius:7px;
+    font-size:12px;
+    line-height:1.5;
+    pointer-events:none;
+    z-index:100;
+    box-shadow:0 4px 15px rgba(0,0,0,.2);
+}
+
+@media(max-width:800px){
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
+    select{
+        width:100%;
     }
 
-    .container {
-      display: flex;
-      gap: 30px;
-      flex-wrap: wrap;
-      justify-content: center;
+    .growth{
+        gap:15px;
+        flex-wrap:wrap;
     }
 
-    table {
-      border-collapse: collapse;
-      width: 320px;
-      background-color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      border-radius: 12px;
-      overflow: hidden;
-    }
+}
 
-    th {
-      background-color: #2c3e50;
-      color: white;
-      padding: 12px;
-      text-align: center;
-      font-size: 16px;
-    }
+</style>
 
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .total {
-      background-color: #ffe082;
-      font-weight: bold;
-      text-align: center;
-      font-size: 16px;
-    }
-
-    .ganancia {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-      background-color: #c8e6c9;
-      padding: 15px;
-      border-radius: 10px;
-      width: 300px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-  </style>
 </head>
+
 <body>
 
-  <h1>Simula tu rentabilidad: compra hoy, vende con el nuevo precio</h1>
+<div class="container">
 
-  <div style="text-align:center; margin-bottom:20px;">
-    <label><strong>Ingresa Cajas:</strong></label>
-    <input type="number" id="cajas" oninput="calcular()" style="width:150px; margin-left:10px;">
-  </div>
+    <!-- CABECERA -->
 
-  <div class="container">
+    <div class="header">
 
-    <!-- Compra Abril -->
-    <table>
-      <tr>
-        <th colspan="2">Compra en Abril</th>
-      </tr>
-      <tr>
-        <td>Precio de compra</td>
-        <td>S/ 62.30</td>
-      </tr>
-      <tr>
-        <td>Cajas</td>
-        <td id="cajasCompra">0</td>
-      </tr>
-      <tr>
-        <td>Total</td>
-        <td class="total" id="totalCompra">S/ 0.00</td>
-      </tr>
-    </table>
+        <div class="title">
+            VOLUMEN BEER
+        </div>
 
-    <!-- Venta Mayo -->
-    <table>
-      <tr>
-        <th colspan="2">Vende en Mayo</th>
-      </tr>
-      <tr>
-        <td>Precio de venta</td>
-        <td>S/ 78.00</td>
-      </tr>
-      <tr>
-        <td>Cajas</td>
-        <td id="cajasVenta">0</td>
-      </tr>
-      <tr>
-        <td>Total</td>
-        <td class="total" id="totalVenta">S/ 0.00</td>
-      </tr>
-    </table>
+        <select id="clientSelect"></select>
 
-  </div>
+    </div>
 
-  <!-- Ganancia -->
-  <div class="ganancia" id="ganancia">
-    Ganancia: S/ 0.00
-  </div>
 
-  <script>
-    function calcular() {
-      let precioCompra = 62.30;
-      let precioVenta = 78.00;
+    <!-- CLIENTE -->
 
-      let cajas = document.getElementById('cajas').value || 0;
+    <div class="client-title" id="clientName"></div>
 
-      document.getElementById('cajasCompra').innerText = cajas;
-      document.getElementById('cajasVenta').innerText = cajas;
+    <div class="subtitle">
+        Beer en Cajas Equivalentes
+    </div>
 
-      let totalCompra = cajas * precioCompra;
-      let totalVenta = cajas * precioVenta;
-      let ganancia = totalVenta - totalCompra;
 
-      document.getElementById('totalCompra').innerText = 'S/ ' + totalCompra.toFixed(2);
-      document.getElementById('totalVenta').innerText = 'S/ ' + totalVenta.toFixed(2);
-      document.getElementById('ganancia').innerText = 'Ganancia: S/ ' + ganancia.toFixed(2);
+    <!-- GRÁFICO -->
+
+    <div class="chart-container">
+
+        <svg
+            id="chart"
+            viewBox="0 0 1200 480"
+            preserveAspectRatio="none">
+        </svg>
+
+    </div>
+
+
+    <!-- LEYENDA -->
+
+    <div class="legend">
+
+        <div class="legend-item">
+
+            <div class="legend-circle yellow"></div>
+
+            <span>2025</span>
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <div class="legend-circle black"></div>
+
+            <span>2026</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- CRECIMIENTO -->
+
+    <div class="growth">
+
+        <div>
+            Jun vs LY:
+            <strong id="growthJun"></strong>
+        </div>
+
+        <div>
+            Jul vs LY:
+            <strong id="growthJul"></strong>
+        </div>
+
+        <div>
+            Ago vs LY:
+            <strong id="growthAgo"></strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="tooltip" class="tooltip"></div>
+
+
+<script>
+
+/* =====================================================
+   DATOS
+===================================================== */
+
+const clients = [
+
+{
+    name:"Inversiones Del Valle E.I.R.L.",
+    values2025:[49915,71684,75635],
+    values2026:[51037,71234,60828]
+},
+
+{
+    name:"Grupo Comercio En Linea S.A.C.",
+    values2025:[14834,19759,25713],
+    values2026:[11544,18749,26255]
+},
+
+{
+    name:"Laura Lazo, Fredy Benavides",
+    values2025:[7349,10256,12546],
+    values2026:[9307,7234,13490]
+},
+
+{
+    name:"Bastidas Lazo, Nelly Miriam",
+    values2025:[2621,11035,10183],
+    values2026:[4575,9024,13928]
+},
+
+{
+    name:"Distribuidora Inversiones Rosita",
+    values2025:[5682,6030,6456],
+    values2026:[5244,8109,9446]
+},
+
+{
+    name:"Inversiones Rodriguez E & M S.A.C",
+    values2025:[6025,5503,5031],
+    values2026:[5338,7135,4224]
+},
+
+{
+    name:"Granados Pomsunco, Venancio",
+    values2025:[2958,4712,8945],
+    values2026:[4297,4248,7566]
+},
+
+{
+    name:"Eventos Especiales Backus Yachay",
+    values2025:[3106,4023,6622],
+    values2026:[2500,6083,10119]
+},
+
+{
+    name:"Aguilar Betalleluz, Jaime Juan",
+    values2025:[5810,2603,7866],
+    values2026:[33,4846,8037]
+},
+
+{
+    name:"Martinez Arcos, Yandiri Ketty",
+    values2025:[5060,5766,4977],
+    values2026:[4291,4556,4501]
+},
+
+{
+    name:"Distribuidora Inversiones Gloria E.I.",
+    values2025:[4487,4628,4921],
+    values2026:[3658,4613,6010]
+},
+
+{
+    name:"BALBIN GARCIA, RAQUEL",
+    values2025:[4283,5387,4268],
+    values2026:[3785,5082,3273]
+},
+
+{
+    name:"Amaya Adama, Danny Jefferson",
+    values2025:[2520,2977,2755],
+    values2026:[4197,3785,4720]
+},
+
+{
+    name:"Inversiones Rodriguez y Mery S.A.",
+    values2025:[0,0,5950],
+    values2026:[4919,5335,3510]
+},
+
+{
+    name:"Eulogio Martinez, Marino",
+    values2025:[2939,3363,3547],
+    values2026:[1258,4418,3792]
+},
+
+{
+    name:"Canchari Matos, Remigia",
+    values2025:[2354,4345,1609],
+    values2026:[2383,3356,3066]
+},
+
+{
+    name:"Gonz. Chmvo E.I.R.L.",
+    values2025:[4114,1575,3366],
+    values2026:[2451,2442,2745]
+},
+
+{
+    name:"Huaynate Caballero, Carmen Silvia",
+    values2025:[2862,1451,2994],
+    values2026:[2981,2600,3674]
+}
+
+];
+
+
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
+const months = [
+    "Junio",
+    "Julio",
+    "Agosto"
+];
+
+const select = document.getElementById("clientSelect");
+
+const svg = document.getElementById("chart");
+
+const tooltip = document.getElementById("tooltip");
+
+
+/* =====================================================
+   CARGAR CLIENTES
+===================================================== */
+
+clients.forEach((client,index)=>{
+
+    const option = document.createElement("option");
+
+    option.value = index;
+
+    option.textContent = client.name;
+
+    select.appendChild(option);
+
+});
+
+
+/* =====================================================
+   FORMATO NÚMEROS
+===================================================== */
+
+function formatNumber(number){
+
+    return number.toLocaleString("es-PE");
+
+}
+
+
+/* =====================================================
+   CRECIMIENTO
+===================================================== */
+
+function calculateGrowth(ly,current){
+
+    if(ly === 0){
+
+        return null;
+
     }
-  </script>
+
+    return ((current / ly) - 1) * 100;
+
+}
+
+
+function formatGrowth(value){
+
+    if(value === null){
+
+        return "N/D";
+
+    }
+
+    return (value >= 0 ? "+" : "") +
+           value.toFixed(1) +
+           "%";
+
+}
+
+
+/* =====================================================
+   DIBUJAR GRÁFICO
+===================================================== */
+
+function drawChart(animate=true){
+
+    const client =
+        clients[Number(select.value)];
+
+
+    const values25 =
+        client.values2025;
+
+    const values26 =
+        client.values2026;
+
+
+    /* DIMENSIONES */
+
+    const W = 1200;
+
+    const H = 480;
+
+    const left = 65;
+
+    const right = 30;
+
+    const top = 30;
+
+    const bottom = 75;
+
+
+    const chartWidth =
+        W - left - right;
+
+    const chartHeight =
+        H - top - bottom;
+
+
+    /* ESCALA */
+
+    const maximum =
+        Math.max(
+            ...values25,
+            ...values26
+        );
+
+
+    const step =
+        Math.ceil(
+            maximum / 4 / 5000
+        ) * 5000;
+
+
+    const maxY =
+        step * 4;
+
+
+    /* POSICIONES X */
+
+    const xPositions = [
+
+        left,
+
+        left + chartWidth / 2,
+
+        W - right
+
+    ];
+
+
+    /* POSICIÓN Y */
+
+    function y(value){
+
+        return top +
+            ((maxY-value) / maxY)
+            * chartHeight;
+
+    }
+
+
+    let html = "";
+
+
+    /* =================================================
+       GRID
+    ================================================= */
+
+    for(let i=0;i<=4;i++){
+
+        const value =
+            maxY -
+            (maxY/4)*i;
+
+        const yy =
+            y(value);
+
+
+        html += `
+
+            <line
+                class="grid"
+                x1="${left}"
+                y1="${yy}"
+                x2="${W-right}"
+                y2="${yy}">
+            </line>
+
+            <text
+                class="axis-label"
+                x="${left-10}"
+                y="${yy+4}"
+                text-anchor="end">
+
+                ${formatNumber(Math.round(value))}
+
+            </text>
+
+        `;
+
+    }
+
+
+    /* =================================================
+       PUNTOS
+    ================================================= */
+
+    const points25 =
+        values25.map(
+            (value,i)=>[
+                xPositions[i],
+                y(value)
+            ]
+        );
+
+
+    const points26 =
+        values26.map(
+            (value,i)=>[
+                xPositions[i],
+                y(value)
+            ]
+        );
+
+
+    function createPath(points){
+
+        return points
+            .map(
+                (point,index)=>
+                (index===0 ? "M" : "L") +
+                point[0] +
+                " " +
+                point[1]
+            )
+            .join(" ");
+
+    }
+
+
+    /* =================================================
+       LÍNEAS
+    ================================================= */
+
+    html += `
+
+        <path
+            id="line25"
+            class="line-2025"
+            d="${createPath(points25)}">
+        </path>
+
+
+        <path
+            id="line26"
+            class="line-2026"
+            d="${createPath(points26)}">
+        </path>
+
+    `;
+
+
+    /* =================================================
+       MESES Y PUNTOS
+    ================================================= */
+
+    months.forEach((month,index)=>{
+
+        const x =
+            xPositions[index];
+
+
+        const y25 =
+            y(values25[index]);
+
+
+        const y26 =
+            y(values26[index]);
+
+
+        /* MES */
+
+        html += `
+
+            <text
+                class="month-label"
+                x="${x}"
+                y="${H-bottom+28}"
+                text-anchor="middle">
+
+                ${month}
+
+            </text>
+
+        `;
+
+
+        /* PUNTO 2025 */
+
+        html += `
+
+            <circle
+                class="point-2025"
+                cx="${x}"
+                cy="${y25}"
+                r="5"
+                data-year="2025"
+                data-month="${index}">
+            </circle>
+
+        `;
+
+
+        /* PUNTO 2026 */
+
+        html += `
+
+            <circle
+                class="point-2026"
+                cx="${x}"
+                cy="${y26}"
+                r="5"
+                data-year="2026"
+                data-month="${index}">
+            </circle>
+
+        `;
+
+
+        /* VALOR 2025 */
+
+        html += `
+
+            <text
+                class="value-2025"
+                x="${x}"
+                y="${y25-12}"
+                text-anchor="middle">
+
+                ${formatNumber(values25[index])}
+
+            </text>
+
+        `;
+
+
+        /* VALOR 2026 */
+
+        html += `
+
+            <text
+                class="value-2026"
+                x="${x}"
+                y="${y26+22}"
+                text-anchor="middle">
+
+                ${formatNumber(values26[index])}
+
+            </text>
+
+        `;
+
+    });
+
+
+    /* INSERTAR SVG */
+
+    svg.innerHTML = html;
+
+
+    /* =================================================
+       ANIMACIÓN
+    ================================================= */
+
+    ["line25","line26"].forEach(id=>{
+
+        const path =
+            document.getElementById(id);
+
+        const length =
+            path.getTotalLength();
+
+
+        path.style.strokeDasharray =
+            length;
+
+        path.style.strokeDashoffset =
+            animate ? length : 0;
+
+
+        if(animate){
+
+            requestAnimationFrame(()=>{
+
+                path.style.transition =
+                    "stroke-dashoffset 0.7s ease";
+
+                path.style.strokeDashoffset =
+                    "0";
+
+            });
+
+        }
+
+    });
+
+
+    /* =================================================
+       TOOLTIP
+    ================================================= */
+
+    svg.querySelectorAll("circle")
+        .forEach(point=>{
+
+        point.addEventListener(
+            "mouseenter",
+            function(){
+
+                const monthIndex =
+                    Number(this.dataset.month);
+
+                const year =
+                    this.dataset.year;
+
+
+                const value =
+                    year === "2025"
+                    ? values25[monthIndex]
+                    : values26[monthIndex];
+
+
+                const ly =
+                    year === "2025"
+                    ? values25[monthIndex]
+                    : values25[monthIndex];
+
+
+                const actual =
+                    values26[monthIndex];
+
+
+                const growth =
+                    calculateGrowth(
+                        ly,
+                        actual
+                    );
+
+
+                tooltip.innerHTML = `
+
+                    <strong>
+                        ${client.name}
+                    </strong>
+
+                    <br>
+
+                    ${months[monthIndex]}
+                    ${year}:
+                    ${formatNumber(value)}
+                    cajas eq.
+
+                    <br>
+
+                    Crecimiento vs LY:
+                    <strong>
+                        ${formatGrowth(growth)}
+                    </strong>
+
+                `;
+
+
+                tooltip.style.display =
+                    "block";
+
+            }
+        );
+
+
+        point.addEventListener(
+            "mousemove",
+            function(event){
+
+                tooltip.style.left =
+                    event.clientX + 15 + "px";
+
+                tooltip.style.top =
+                    event.clientY + 15 + "px";
+
+            }
+        );
+
+
+        point.addEventListener(
+            "mouseleave",
+            function(){
+
+                tooltip.style.display =
+                    "none";
+
+            }
+        );
+
+    });
+
+
+    /* =================================================
+       TÍTULO
+    ================================================= */
+
+    document.getElementById(
+        "clientName"
+    ).textContent =
+        client.name;
+
+
+    /* =================================================
+       CRECIMIENTOS
+    ================================================= */
+
+    const growths =
+        values25.map(
+            (value,index)=>
+            calculateGrowth(
+                value,
+                values26[index]
+            )
+        );
+
+
+    const growthElements = [
+
+        document.getElementById("growthJun"),
+
+        document.getElementById("growthJul"),
+
+        document.getElementById("growthAgo")
+
+    ];
+
+
+    growthElements.forEach(
+        (element,index)=>{
+
+        const value =
+            growths[index];
+
+
+        element.textContent =
+            formatGrowth(value);
+
+
+        element.className =
+            value !== null &&
+            value >= 0
+            ? "positive"
+            : "negative";
+
+    });
+
+}
+
+
+/* =====================================================
+   CAMBIO DE CLIENTE
+===================================================== */
+
+select.addEventListener(
+    "change",
+    function(){
+
+        drawChart(true);
+
+    }
+);
+
+
+/* =====================================================
+   INICIO
+===================================================== */
+
+drawChart(false);
+
+</script>
 
 </body>
 </html>
