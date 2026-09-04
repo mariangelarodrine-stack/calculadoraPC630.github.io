@@ -3,603 +3,1032 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simula tu rentabilidad - Pilsen 630</title>
+
+<title>Volumen Beer</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+
+*{
+    box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  background: #f4f6f8;
-  color: #111827;
+body{
+    margin:0;
+    background:white;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#111827;
 }
 
-.app {
-  max-width: 430px;
-  margin: auto;
-  background: #f8fafc;
-  min-height: 100vh;
+.container{
+    width:95%;
+    max-width:1250px;
+    margin:30px auto;
 }
 
-.header {
-  background: linear-gradient(135deg, #006b2b, #05883a);
-  color: white;
-  text-align: center;
-  padding: 28px 18px 24px;
-  border-radius: 0 0 22px 22px;
+/* TÍTULO */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-  line-height: 1.2;
+.title{
+    color:#123b91;
+    font-size:20px;
+    font-weight:bold;
+    font-style:italic;
+    text-transform:uppercase;
 }
 
-.content {
-  padding: 14px;
+/* SELECTOR */
+
+select{
+    width:360px;
+    padding:11px 14px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    background:white;
+    font-size:14px;
+    color:#333;
+    cursor:pointer;
 }
 
-.card {
-  background: white;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,.08);
-  border: 1px solid #e5e7eb;
+/* NOMBRE CLIENTE */
+
+.client-title{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:5px;
 }
 
-.card-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.subtitle{
+    font-size:12px;
+    color:#777;
+    margin-bottom:5px;
 }
 
-.icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 32px;
+/* GRÁFICO */
+
+.chart-container{
+    width:100%;
+    height:480px;
 }
 
-.icon.green { background: #e7f8eb; }
-.icon.blue { background: #eaf3ff; }
-.icon.dark { background: #eef2f7; }
-.icon.purple { background: #f2e8ff; }
-
-.card h2 {
-  margin: 0 0 12px;
-  font-size: 20px;
+svg{
+    width:100%;
+    height:100%;
+    overflow:visible;
 }
 
-.green-text { color: #007a32; }
-.blue-text { color: #064f9e; }
-.purple-text { color: #6b21a8; }
-.orange-text { color: #f05a1a; }
+/* GRID */
 
-.price-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  text-align: center;
-  gap: 8px;
+.grid{
+    stroke:#eeeeee;
+    stroke-width:1;
 }
 
-.price-grid strong {
-  font-size: 18px;
+/* EJES */
+
+.axis-label{
+    font-size:11px;
+    fill:#777;
 }
 
-.price-grid span {
-  display: block;
-  font-size: 12px;
-  margin-top: 4px;
+.month-label{
+    font-size:12px;
+    fill:#222;
 }
 
-.badge {
-  margin-top: 14px;
-  padding: 9px;
-  border-radius: 10px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 14px;
+/* LÍNEAS */
+
+.line-2025{
+    fill:none;
+    stroke:#e3b51b;
+    stroke-width:3;
+    stroke-linecap:round;
+    stroke-linejoin:round;
 }
 
-.badge.green { background: #e9f8ee; color: #007a32; }
-.badge.blue { background: #eaf3ff; color: #064f9e; }
-.badge.yellow { background: #fff7d6; color: #007a32; }
-
-.venta-row,
-.gain-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 10px;
-  align-items: center;
-  margin: 8px 0;
-  font-size: 15px;
+.line-2026{
+    fill:none;
+    stroke:#111111;
+    stroke-width:3.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
 }
 
-.highlight {
-  background: #fff36b;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: bold;
+/* PUNTOS */
+
+.point-2025{
+    fill:#e3b51b;
+    stroke:white;
+    stroke-width:2;
 }
 
-.sim-header {
-  background: #14213d;
-  color: white;
-  text-align: center;
-  padding: 12px;
-  font-weight: bold;
-  border-radius: 12px 12px 0 0;
-  margin-top: 14px;
+.point-2026{
+    fill:#111111;
+    stroke:white;
+    stroke-width:2;
 }
 
-.sim-box {
-  background: white;
-  padding: 16px;
-  border-radius: 0 0 14px 14px;
-  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+/* VALORES */
+
+.value-2025{
+    font-size:11px;
+    fill:#987900;
+    font-weight:500;
 }
 
-.zone-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 12px 0 18px;
+.value-2026{
+    font-size:11px;
+    fill:#111;
+    font-weight:500;
 }
 
-.zone-buttons button {
-  border: 1.5px solid #cbd5e1;
-  background: white;
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 15px;
+/* LEYENDA */
+
+.legend{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    margin-top:5px;
+    font-size:12px;
 }
 
-.zone-buttons button.active {
-  background: #009b3e;
-  color: white;
-  border-color: #009b3e;
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
 }
 
-.qty-title {
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 8px;
+.legend-circle{
+    width:11px;
+    height:11px;
+    border-radius:50%;
 }
 
-.qty-control {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 18px;
+.yellow{
+    background:#e3b51b;
 }
 
-.qty-control button {
-  width: 48px;
-  height: 42px;
-  border: none;
-  background: #00843d;
-  color: white;
-  font-size: 28px;
-  font-weight: bold;
+.black{
+    background:#111;
 }
 
-.qty-control input {
-  width: 95px;
-  height: 42px;
-  text-align: center;
-  border: 1px solid #cbd5e1;
-  font-size: 24px;
-  font-weight: bold;
+/* CRECIMIENTO */
+
+.growth{
+    display:flex;
+    justify-content:center;
+    gap:45px;
+    margin-top:20px;
+    font-size:12px;
+    color:#777;
 }
 
-.qty-control button:first-child {
-  border-radius: 10px 0 0 10px;
+.growth strong{
+    font-size:14px;
+    color:#111;
 }
 
-.qty-control button:last-child {
-  border-radius: 0 10px 10px 0;
+.positive{
+    color:#16803c !important;
 }
 
-.metrics {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 18px;
+.negative{
+    color:#c62828 !important;
 }
 
-.metric {
-  border-radius: 14px;
-  padding: 14px 10px;
-  text-align: center;
-  font-weight: bold;
+/* TOOLTIP */
+
+.tooltip{
+    position:fixed;
+    display:none;
+    background:#111827;
+    color:white;
+    padding:10px 12px;
+    border-radius:7px;
+    font-size:12px;
+    line-height:1.5;
+    pointer-events:none;
+    z-index:100;
+    box-shadow:0 4px 15px rgba(0,0,0,.2);
 }
 
-.metric span {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 8px;
-  color: #111827;
+@media(max-width:800px){
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    select{
+        width:100%;
+    }
+
+    .growth{
+        gap:15px;
+        flex-wrap:wrap;
+    }
+
 }
 
-.metric strong {
-  font-size: 24px;
-}
-
-.m-green { background: #eaf8ee; color: #007a32; }
-.m-yellow { background: #fff2d9; color: #f05a1a; }
-.m-purple { background: #f3e8ff; color: #6b21a8; }
-
-.summary {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.box {
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid #dbe3ec;
-  background: white;
-}
-
-.box-title {
-  padding: 10px;
-  color: white;
-  text-align: center;
-  font-weight: bold;
-}
-
-.box-title.green { background: #007a32; }
-.box-title.blue { background: #064f9e; }
-
-.box-content {
-  padding: 13px;
-  font-size: 14px;
-}
-
-.line-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.total {
-  border-top: 1px solid #e5e7eb;
-  padding-top: 10px;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.result {
-  margin-top: 15px;
-  background: #dff7e8;
-  border: 1.5px solid #56b87c;
-  border-radius: 16px;
-  text-align: center;
-  padding: 20px;
-}
-
-.result .bag {
-  font-size: 48px;
-}
-
-.result p {
-  margin: 8px 0;
-  font-weight: bold;
-}
-
-.result strong {
-  font-size: 38px;
-  color: #007a32;
-}
-
-.note {
-  margin-top: 14px;
-  background: #eef7ff;
-  color: #1e3a5f;
-  padding: 13px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-}
 </style>
+
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <div class="header">
-    <h1>🍺 Simula tu rentabilidad<br>Pilsen 630</h1>
-  </div>
+    <!-- CABECERA -->
 
-  <div class="content">
+    <div class="header">
 
-    <div class="card">
-      <div class="card-row">
-        <div class="icon green">🌴</div>
-        <div style="width:100%">
-          <h2 class="green-text">Compra Oriente</h2>
-          <div class="price-grid">
-            <div><strong>S/ 5.63</strong><span>Precio Botella</span></div>
-            <div><strong>12</strong><span>Botellas</span></div>
-            <div><strong class="green-text">S/ 67.60</strong><span>Precio Caja</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="badge green">💰 Compra por caja: S/ 67.60</div>
-    </div>
-
-    <div class="card">
-      <div class="card-row">
-        <div class="icon blue">🏔️</div>
-        <div style="width:100%">
-          <h2 class="blue-text">Compra Huancayo</h2>
-          <div class="price-grid">
-            <div><strong>S/ 5.74</strong><span>Precio Botella</span></div>
-            <div><strong>12</strong><span>Botellas</span></div>
-            <div><strong class="blue-text">S/ 68.95</strong><span>Precio Caja</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="badge blue">💰 Compra por caja: S/ 68.95</div>
-    </div>
-
-    <div class="card">
-      <div class="card-row">
-        <div class="icon dark">🛒</div>
-        <div style="width:100%">
-          <h2>Venta Consumidor - PTC</h2>
-
-          <div class="venta-row">
-            <div>Hasta el 19.07</div>
-            <div class="highlight">S/ 6.50</div>
-            <strong class="green-text">S/ 78.00</strong>
-          </div>
-
-          <div class="venta-row">
-            <div>Desde 20.07</div>
-            <div class="highlight">S/ 7.00</div>
-            <strong class="green-text">S/ 84.00</strong>
-          </div>
-        </div>
-      </div>
-      <div class="badge yellow">🏷️ Venta desde 20.07: S/ 84.00</div>
-    </div>
-
-      <div class="card-row">
-
-        <div style="width:100%">
-        </div>
-      </div>
-    </div>
-    <!-- GANANCIA ORIENTE -->
-    <div class="card">
-      <div class="card-row">
-        <div class="icon green">🏆</div>
-        <div style="width:100%">
-          <h2 class="green-text">Ganancia Oriente (por caja)</h2>
-
-          <div class="gain-row">
-            <div>Hasta 19.07</div>
-            <strong>S/ 10.40</strong>
-          </div>
-
-          <div class="gain-row orange-text">
-            <div>Desde 20.07</div>
-            <strong>S/ 16.40</strong>
-          </div>
-        </div>
-      </div>
-      <div class="badge blue">💰 Ganancia por caja (Voceo): S/ 6.40</div>
-    </div>
-
-    <!-- GANANCIA HUANCAYO -->
-    <div class="card">
-      <div class="card-row">
-        <div class="icon blue">🏆</div>
-        <div style="width:100%">
-          <h2 class="blue-text">Ganancia Huancayo (por caja)</h2>
-
-          <div class="gain-row">
-            <div>Hasta 19.07</div>
-            <strong>S/ 9.05</strong>
-          </div>
-
-          <div class="gain-row orange-text">
-            <div>Desde 20.07</div>
-            <strong>S/ 15.05</strong>
-          </div>
-        </div>
-      </div>
-      <div class="badge blue">💰 Ganancia por caja (Voceo): S/ 6.00</div>
-    </div>
-    
-    <div class="sim-header">💰 SIMULA TU GANANCIA</div>
-
-    <div class="sim-box">
-
-      <div class="zone-buttons">
-        <button id="btnOriente" class="active" onclick="cambiarZona('oriente')">🌴 Oriente</button>
-        <button id="btnHuancayo" onclick="cambiarZona('huancayo')">🏔️ Huancayo</button>
-      </div>
-
-      <div class="qty-title">Cantidad de cajas</div>
-
-      <div class="qty-control">
-        <button onclick="menos()">−</button>
-        <input type="number" id="cajas" value="10" min="1" oninput="calcular()">
-        <button onclick="mas()">+</button>
-      </div>
-
-      <div class="metrics">
-        <div class="metric m-green">
-          <span>💰 Ganancia Total</span>
-          <strong id="gananciaTotal">S/ 164.00</strong>
+        <div class="title">
+            VOLUMEN BEER
         </div>
 
-        <div class="metric m-green">
-          <span>🚚 Voceo</span>
-          <strong id="voceo">S/ 64.00</strong>
-        </div>
-
-        <div class="metric m-yellow">
-          <span>💵 Ganancia / Caja</span>
-          <strong id="gananciaCaja">S/ 16.40</strong>
-        </div>
-
-        <div class="metric m-purple">
-          <span>📈 Rentabilidad</span>
-          <strong id="rentabilidad">24.3%</strong>
-        </div>
-      </div>
-
-      <div class="summary">
-
-        <div class="box">
-          <div class="box-title green" id="tituloCompra">COMPRA</div>
-          <div class="box-content">
-            <div class="line-row">
-              <span>Precio caja</span>
-              <strong id="precioCompra">S/ 67.60</strong>
-            </div>
-            <div class="line-row">
-              <span>Cajas</span>
-              <strong id="cajasCompra">10</strong>
-            </div>
-            <div class="line-row total green-text">
-              <span>Total</span>
-              <strong id="totalCompra">S/ 676.00</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="box">
-          <div class="box-title blue">VENTA</div>
-          <div class="box-content">
-            <div class="line-row">
-              <span>Precio caja</span>
-              <strong>S/ 84.00</strong>
-            </div>
-            <div class="line-row">
-              <span>Cajas</span>
-              <strong id="cajasVenta">10</strong>
-            </div>
-            <div class="line-row total blue-text">
-              <span>Total</span>
-              <strong id="totalVenta">S/ 840.00</strong>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="result">
-        <div class="bag">💰</div>
-        <p>Tu ganancia total es:</p>
-        <strong id="gananciaFinal">S/ 164.00</strong>
-      </div>
-
-      <div class="note" id="nota">
-        💡 Los cálculos están basados en los precios actuales de compra y venta desde el 20.07.
-      </div>
+        <select id="clientSelect"></select>
 
     </div>
 
-  </div>
+
+    <!-- CLIENTE -->
+
+    <div class="client-title" id="clientName"></div>
+
+    <div class="subtitle">
+        Beer en Cajas Equivalentes
+    </div>
+
+
+    <!-- GRÁFICO -->
+
+    <div class="chart-container">
+
+        <svg
+            id="chart"
+            viewBox="0 0 1200 480"
+            preserveAspectRatio="none">
+        </svg>
+
+    </div>
+
+
+    <!-- LEYENDA -->
+
+    <div class="legend">
+
+        <div class="legend-item">
+
+            <div class="legend-circle yellow"></div>
+
+            <span>2025</span>
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <div class="legend-circle black"></div>
+
+            <span>2026</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- CRECIMIENTO -->
+
+    <div class="growth">
+
+        <div>
+            Jun vs LY:
+            <strong id="growthJun"></strong>
+        </div>
+
+        <div>
+            Jul vs LY:
+            <strong id="growthJul"></strong>
+        </div>
+
+        <div>
+            Ago vs LY:
+            <strong id="growthAgo"></strong>
+        </div>
+
+    </div>
 
 </div>
 
+
+<div id="tooltip" class="tooltip"></div>
+
+
 <script>
-let zonaActual = "oriente";
 
-function cambiarZona(zona) {
-  zonaActual = zona;
+/* =====================================================
+   DATOS
+===================================================== */
 
-  document.getElementById("btnOriente").classList.remove("active");
-  document.getElementById("btnHuancayo").classList.remove("active");
+const clients = [
 
-  if (zona === "oriente") {
-    document.getElementById("btnOriente").classList.add("active");
-  } else {
-    document.getElementById("btnHuancayo").classList.add("active");
-  }
+{
+    name:"Inversiones Del Valle E.I.R.L.",
+    values2025:[49915,71684,75635],
+    values2026:[51037,71234,60828]
+},
 
-  calcular();
+{
+    name:"Grupo Comercio En Linea S.A.C.",
+    values2025:[14834,19759,25713],
+    values2026:[11544,18749,26255]
+},
+
+{
+    name:"Laura Lazo, Fredy Benavides",
+    values2025:[7349,10256,12546],
+    values2026:[9307,7234,13490]
+},
+
+{
+    name:"Bastidas Lazo, Nelly Miriam",
+    values2025:[2621,11035,10183],
+    values2026:[4575,9024,13928]
+},
+
+{
+    name:"Distribuidora Inversiones Rosita",
+    values2025:[5682,6030,6456],
+    values2026:[5244,8109,9446]
+},
+
+{
+    name:"Inversiones Rodriguez E & M S.A.C",
+    values2025:[6025,5503,5031],
+    values2026:[5338,7135,4224]
+},
+
+{
+    name:"Granados Pomsunco, Venancio",
+    values2025:[2958,4712,8945],
+    values2026:[4297,4248,7566]
+},
+
+{
+    name:"Eventos Especiales Backus Yachay",
+    values2025:[3106,4023,6622],
+    values2026:[2500,6083,10119]
+},
+
+{
+    name:"Aguilar Betalleluz, Jaime Juan",
+    values2025:[5810,2603,7866],
+    values2026:[33,4846,8037]
+},
+
+{
+    name:"Martinez Arcos, Yandiri Ketty",
+    values2025:[5060,5766,4977],
+    values2026:[4291,4556,4501]
+},
+
+{
+    name:"Distribuidora Inversiones Gloria E.I.",
+    values2025:[4487,4628,4921],
+    values2026:[3658,4613,6010]
+},
+
+{
+    name:"BALBIN GARCIA, RAQUEL",
+    values2025:[4283,5387,4268],
+    values2026:[3785,5082,3273]
+},
+
+{
+    name:"Amaya Adama, Danny Jefferson",
+    values2025:[2520,2977,2755],
+    values2026:[4197,3785,4720]
+},
+
+{
+    name:"Inversiones Rodriguez y Mery S.A.",
+    values2025:[0,0,5950],
+    values2026:[4919,5335,3510]
+},
+
+{
+    name:"Eulogio Martinez, Marino",
+    values2025:[2939,3363,3547],
+    values2026:[1258,4418,3792]
+},
+
+{
+    name:"Canchari Matos, Remigia",
+    values2025:[2354,4345,1609],
+    values2026:[2383,3356,3066]
+},
+
+{
+    name:"Gonz. Chmvo E.I.R.L.",
+    values2025:[4114,1575,3366],
+    values2026:[2451,2442,2745]
+},
+
+{
+    name:"Huaynate Caballero, Carmen Silvia",
+    values2025:[2862,1451,2994],
+    values2026:[2981,2600,3674]
 }
 
-function mas() {
-  const input = document.getElementById("cajas");
-  input.value = Number(input.value) + 1;
-  calcular();
+];
+
+
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
+const months = [
+    "Junio",
+    "Julio",
+    "Agosto"
+];
+
+const select = document.getElementById("clientSelect");
+
+const svg = document.getElementById("chart");
+
+const tooltip = document.getElementById("tooltip");
+
+
+/* =====================================================
+   CARGAR CLIENTES
+===================================================== */
+
+clients.forEach((client,index)=>{
+
+    const option = document.createElement("option");
+
+    option.value = index;
+
+    option.textContent = client.name;
+
+    select.appendChild(option);
+
+});
+
+
+/* =====================================================
+   FORMATO NÚMEROS
+===================================================== */
+
+function formatNumber(number){
+
+    return number.toLocaleString("es-PE");
+
 }
 
-function menos() {
-  const input = document.getElementById("cajas");
-  if (Number(input.value) > 1) {
-    input.value = Number(input.value) - 1;
-  }
-  calcular();
+
+/* =====================================================
+   CRECIMIENTO
+===================================================== */
+
+function calculateGrowth(ly,current){
+
+    if(ly === 0){
+
+        return null;
+
+    }
+
+    return ((current / ly) - 1) * 100;
+
 }
 
-// FORMATEADOR DE MILES
-function format(n) {
-  return n.toLocaleString('es-PE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
+
+function formatGrowth(value){
+
+    if(value === null){
+
+        return "N/D";
+
+    }
+
+    return (value >= 0 ? "+" : "") +
+           value.toFixed(1) +
+           "%";
+
 }
 
-function calcular() {
-  const cajas = Number(document.getElementById("cajas").value) || 0;
-  const precioVenta = 84.00;
 
-  let precioCompra;
-  let voceoCaja;
-  let nombreZona;
+/* =====================================================
+   DIBUJAR GRÁFICO
+===================================================== */
 
-  if (zonaActual === "oriente") {
-    precioCompra = 67.60;
-    voceoCaja = 6.40;
-    nombreZona = "Oriente";
-  } else {
-    precioCompra = 68.95;
-    voceoCaja = 6.00;
-    nombreZona = "Huancayo";
-  }
+function drawChart(animate=true){
 
-  const gananciaCaja = precioVenta - precioCompra;
-  const totalCompra = cajas * precioCompra;
-  const totalVenta = cajas * precioVenta;
-  const gananciaTotal = cajas * gananciaCaja;
-  const voceo = cajas * voceoCaja;
-  const rentabilidad = (gananciaCaja / precioCompra) * 100;
+    const client =
+        clients[Number(select.value)];
 
-  document.getElementById("gananciaTotal").innerText = `S/ ${format(gananciaTotal)}`;
-  document.getElementById("voceo").innerText = `S/ ${format(voceo)}`;
-  document.getElementById("gananciaCaja").innerText = `S/ ${format(gananciaCaja)}`;
-  document.getElementById("rentabilidad").innerText = `${rentabilidad.toFixed(1)}%`;
 
-  document.getElementById("tituloCompra").innerText = `COMPRA ${nombreZona.toUpperCase()}`;
-  document.getElementById("precioCompra").innerText = `S/ ${format(precioCompra)}`;
-  document.getElementById("cajasCompra").innerText = cajas;
-  document.getElementById("cajasVenta").innerText = cajas;
-  document.getElementById("totalCompra").innerText = `S/ ${format(totalCompra)}`;
-  document.getElementById("totalVenta").innerText = `S/ ${format(totalVenta)}`;
-  document.getElementById("gananciaFinal").innerText = `S/ ${format(gananciaTotal)}`;
+    const values25 =
+        client.values2025;
 
-  document.getElementById("nota").innerText =
-    `💡 Los cálculos están basados en compra ${nombreZona} y venta desde el 20.07.`;
+    const values26 =
+        client.values2026;
+
+
+    /* DIMENSIONES */
+
+    const W = 1200;
+
+    const H = 480;
+
+    const left = 65;
+
+    const right = 30;
+
+    const top = 30;
+
+    const bottom = 75;
+
+
+    const chartWidth =
+        W - left - right;
+
+    const chartHeight =
+        H - top - bottom;
+
+
+    /* ESCALA */
+
+    const maximum =
+        Math.max(
+            ...values25,
+            ...values26
+        );
+
+
+    const step =
+        Math.ceil(
+            maximum / 4 / 5000
+        ) * 5000;
+
+
+    const maxY =
+        step * 4;
+
+
+    /* POSICIONES X */
+
+    const xPositions = [
+
+        left,
+
+        left + chartWidth / 2,
+
+        W - right
+
+    ];
+
+
+    /* POSICIÓN Y */
+
+    function y(value){
+
+        return top +
+            ((maxY-value) / maxY)
+            * chartHeight;
+
+    }
+
+
+    let html = "";
+
+
+    /* =================================================
+       GRID
+    ================================================= */
+
+    for(let i=0;i<=4;i++){
+
+        const value =
+            maxY -
+            (maxY/4)*i;
+
+        const yy =
+            y(value);
+
+
+        html += `
+
+            <line
+                class="grid"
+                x1="${left}"
+                y1="${yy}"
+                x2="${W-right}"
+                y2="${yy}">
+            </line>
+
+            <text
+                class="axis-label"
+                x="${left-10}"
+                y="${yy+4}"
+                text-anchor="end">
+
+                ${formatNumber(Math.round(value))}
+
+            </text>
+
+        `;
+
+    }
+
+
+    /* =================================================
+       PUNTOS
+    ================================================= */
+
+    const points25 =
+        values25.map(
+            (value,i)=>[
+                xPositions[i],
+                y(value)
+            ]
+        );
+
+
+    const points26 =
+        values26.map(
+            (value,i)=>[
+                xPositions[i],
+                y(value)
+            ]
+        );
+
+
+    function createPath(points){
+
+        return points
+            .map(
+                (point,index)=>
+                (index===0 ? "M" : "L") +
+                point[0] +
+                " " +
+                point[1]
+            )
+            .join(" ");
+
+    }
+
+
+    /* =================================================
+       LÍNEAS
+    ================================================= */
+
+    html += `
+
+        <path
+            id="line25"
+            class="line-2025"
+            d="${createPath(points25)}">
+        </path>
+
+
+        <path
+            id="line26"
+            class="line-2026"
+            d="${createPath(points26)}">
+        </path>
+
+    `;
+
+
+    /* =================================================
+       MESES Y PUNTOS
+    ================================================= */
+
+    months.forEach((month,index)=>{
+
+        const x =
+            xPositions[index];
+
+
+        const y25 =
+            y(values25[index]);
+
+
+        const y26 =
+            y(values26[index]);
+
+
+        /* MES */
+
+        html += `
+
+            <text
+                class="month-label"
+                x="${x}"
+                y="${H-bottom+28}"
+                text-anchor="middle">
+
+                ${month}
+
+            </text>
+
+        `;
+
+
+        /* PUNTO 2025 */
+
+        html += `
+
+            <circle
+                class="point-2025"
+                cx="${x}"
+                cy="${y25}"
+                r="5"
+                data-year="2025"
+                data-month="${index}">
+            </circle>
+
+        `;
+
+
+        /* PUNTO 2026 */
+
+        html += `
+
+            <circle
+                class="point-2026"
+                cx="${x}"
+                cy="${y26}"
+                r="5"
+                data-year="2026"
+                data-month="${index}">
+            </circle>
+
+        `;
+
+
+        /* VALOR 2025 */
+
+        html += `
+
+            <text
+                class="value-2025"
+                x="${x}"
+                y="${y25-12}"
+                text-anchor="middle">
+
+                ${formatNumber(values25[index])}
+
+            </text>
+
+        `;
+
+
+        /* VALOR 2026 */
+
+        html += `
+
+            <text
+                class="value-2026"
+                x="${x}"
+                y="${y26+22}"
+                text-anchor="middle">
+
+                ${formatNumber(values26[index])}
+
+            </text>
+
+        `;
+
+    });
+
+
+    /* INSERTAR SVG */
+
+    svg.innerHTML = html;
+
+
+    /* =================================================
+       ANIMACIÓN
+    ================================================= */
+
+    ["line25","line26"].forEach(id=>{
+
+        const path =
+            document.getElementById(id);
+
+        const length =
+            path.getTotalLength();
+
+
+        path.style.strokeDasharray =
+            length;
+
+        path.style.strokeDashoffset =
+            animate ? length : 0;
+
+
+        if(animate){
+
+            requestAnimationFrame(()=>{
+
+                path.style.transition =
+                    "stroke-dashoffset 0.7s ease";
+
+                path.style.strokeDashoffset =
+                    "0";
+
+            });
+
+        }
+
+    });
+
+
+    /* =================================================
+       TOOLTIP
+    ================================================= */
+
+    svg.querySelectorAll("circle")
+        .forEach(point=>{
+
+        point.addEventListener(
+            "mouseenter",
+            function(){
+
+                const monthIndex =
+                    Number(this.dataset.month);
+
+                const year =
+                    this.dataset.year;
+
+
+                const value =
+                    year === "2025"
+                    ? values25[monthIndex]
+                    : values26[monthIndex];
+
+
+                const ly =
+                    year === "2025"
+                    ? values25[monthIndex]
+                    : values25[monthIndex];
+
+
+                const actual =
+                    values26[monthIndex];
+
+
+                const growth =
+                    calculateGrowth(
+                        ly,
+                        actual
+                    );
+
+
+                tooltip.innerHTML = `
+
+                    <strong>
+                        ${client.name}
+                    </strong>
+
+                    <br>
+
+                    ${months[monthIndex]}
+                    ${year}:
+                    ${formatNumber(value)}
+                    cajas eq.
+
+                    <br>
+
+                    Crecimiento vs LY:
+                    <strong>
+                        ${formatGrowth(growth)}
+                    </strong>
+
+                `;
+
+
+                tooltip.style.display =
+                    "block";
+
+            }
+        );
+
+
+        point.addEventListener(
+            "mousemove",
+            function(event){
+
+                tooltip.style.left =
+                    event.clientX + 15 + "px";
+
+                tooltip.style.top =
+                    event.clientY + 15 + "px";
+
+            }
+        );
+
+
+        point.addEventListener(
+            "mouseleave",
+            function(){
+
+                tooltip.style.display =
+                    "none";
+
+            }
+        );
+
+    });
+
+
+    /* =================================================
+       TÍTULO
+    ================================================= */
+
+    document.getElementById(
+        "clientName"
+    ).textContent =
+        client.name;
+
+
+    /* =================================================
+       CRECIMIENTOS
+    ================================================= */
+
+    const growths =
+        values25.map(
+            (value,index)=>
+            calculateGrowth(
+                value,
+                values26[index]
+            )
+        );
+
+
+    const growthElements = [
+
+        document.getElementById("growthJun"),
+
+        document.getElementById("growthJul"),
+
+        document.getElementById("growthAgo")
+
+    ];
+
+
+    growthElements.forEach(
+        (element,index)=>{
+
+        const value =
+            growths[index];
+
+
+        element.textContent =
+            formatGrowth(value);
+
+
+        element.className =
+            value !== null &&
+            value >= 0
+            ? "positive"
+            : "negative";
+
+    });
+
 }
 
-calcular();
+
+/* =====================================================
+   CAMBIO DE CLIENTE
+===================================================== */
+
+select.addEventListener(
+    "change",
+    function(){
+
+        drawChart(true);
+
+    }
+);
+
+
+/* =====================================================
+   INICIO
+===================================================== */
+
+drawChart(false);
+
 </script>
 
 </body>
